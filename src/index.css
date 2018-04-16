@@ -3,3 +3,21 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.product-no-stock {
+  color: red;
+}
+
+.product-name {
+  display: inline-block;
+  width: 100px;
+}
+
+.product-group {
+  margin-top: 10px;
+}
+
+.product-group-name {
+  font-weight: bold;
+  font-size: 16px;
+}

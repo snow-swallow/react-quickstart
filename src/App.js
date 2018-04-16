@@ -11,7 +11,6 @@ class App extends Component {
 
   handleChange(e) {
     this.setState({ text: e.target.value });
-    console.log(this.state);
   }
 
   handleSubmit(e) {
@@ -21,14 +20,21 @@ class App extends Component {
       items: prevState.items.concat(newItem),
       text: ''
     }));
-    console.log(this.state);
+  }
+
+  handleaStar(e) {
+    var stared = this.state.items.find(item => item.stared || false);
+    
   }
 
   render() {
     return (
       <div>
-        <Timer />
+        <Timer interval={1} />
+        <Timer interval={2} />
+        <Timer interval={5} />
         <TodoList items={this.state.items} />
+        <div>Star Count: {this.state.starCount}</div>
         <form onSubmit={this.handleSubmit}>
           <input type="text" onChange={this.handleChange} value={this.state.text} />
         </form>
@@ -38,24 +44,39 @@ class App extends Component {
 }
 
 class TodoList extends Component {
+
+  constructor(props) {
+    super(props);
+    this.handleStar = this.handleStar.bind(this);
+  }
+
   handleStar(e) {
+    console.log(this);
   }
 
   render() {
     return (
-      <ul>
-        {this.props.items.map(item => (
-            <li key={item.id}>{item.text}<a onClick={this.handleStar}>star</a></li>
-          ))}
-      </ul>
+      <ul>{
+        this.props.items.map((todoItem) => (
+          // <li key={todoItem.id}>{todoItem.text}<a onClick={this.handleStar}>❤</a></li>
+          <TodoItem value={todoItem} />
+        ))
+      }</ul>
     );
   }
+}
+
+function TodoItem(props) {
+  var todoItem = props.value;
+  return (
+    <li key={todoItem.id}>{todoItem.text}<a onClick={this.handleStar}>❤</a></li>
+  );
 }
 
 class Timer extends Component {
   constructor(props) {
     super(props);
-    this.state = { date: new Date() };
+    this.state = { date: new Date(), interval: Number.parseInt(props.interval, 10) };
   }
   tick() {
     this.setState({
@@ -63,7 +84,7 @@ class Timer extends Component {
     });
   }
   componentDidMount() {
-    this.timerId = setInterval(() => this.tick(), 1000);
+    this.timerId = setInterval(() => this.tick(), this.state.interval * 1000);
   }
   componentWillUnmount() {
     clearInterval(this.timerId);
