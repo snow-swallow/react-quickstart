@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {Component} from 'react';
 
-let dataSource = [
+let PRODUCTS = [
     {category: "Sporting Goods", price: "$49.99", stocked: true, name: "Football"},
     {category: "Sporting Goods", price: "$9.99", stocked: true, name: "Baseball"},
     {category: "Sporting Goods", price: "$29.99", stocked: false, name: "Basketball"},
@@ -8,21 +8,11 @@ let dataSource = [
     {category: "Electronics", price: "$399.99", stocked: false, name: "iPhone 5"},
     {category: "Electronics", price: "$199.99", stocked: true, name: "Nexus 7"}
   ];
-function grouping(products) {
-    let groups = {};
-    products.forEach(item => {
-        let group = groups[item.category] || [];
-        group.push(item);
-        groups[item.category] = group;
-    });
-    return groups;
-}
 
-class ProductFilter extends React.Component {
-
+class ProductFilter extends Component {
     constructor (props) {
         super(props);
-        this.state = { products: dataSource, keyword: '', showStocked: false };
+        this.state = { products: PRODUCTS, keyword: '', showStocked: false };
         this.handleSearch = this.handleSearch.bind(this);
         this.handleShowStocked = this.handleShowStocked.bind(this);
     }
@@ -30,7 +20,7 @@ class ProductFilter extends React.Component {
     handleSearch(e) {
         let word = e.target.value;
         this.setState({
-            products: dataSource.filter(item => item.name.indexOf(word) > -1 ) || [],
+            products: PRODUCTS.filter(item => item.name.indexOf(word) > -1 ) || [],
             keyword: word
         });
     }
@@ -38,7 +28,7 @@ class ProductFilter extends React.Component {
     handleShowStocked(e) {
         let onlyStocked = e.target.checked;
         this.setState({
-            products: dataSource.filter(item => onlyStocked ? item.stocked === e.target.checked : true) || [],
+            products: PRODUCTS.filter(item => onlyStocked ? item.stocked === e.target.checked : true) || [],
             showStocked: e.target.checked
         });
     }
@@ -55,42 +45,54 @@ class ProductFilter extends React.Component {
 
 }
 
-function ProductList(props) {
-    let groups = grouping(props.products);
-    let state = {titles: Object.keys(groups), itemsByGroup: groups};
-    return (
-        <section>
-            <section>
-                <span className="product-name">Name</span>
-                <span>Price</span>
-            </section>
-            {
-                state.titles.map(title => {
-                    return <section key={title} className="product-group">
-                        <div className="product-group-name">{title}</div>
-                        {
-                            state.itemsByGroup[title].map(item => {
-                                return <div key={item.name} className={item.stocked? '': 'product-no-stock'}>
-                                    <span className="product-name">{item.name}</span><span className="product-price">{item.price}</span>
-                                </div>
-                                })
-                        }
-                    </section>
-                })
-            }
-        </section>
-    )
-}
+class ProductList extends Component {
+    grouping(products) {
+        let groups = {};
+        products.forEach(item => {
+            let group = groups[item.category] || [];
+            group.push(item);
+            groups[item.category] = group;
+        });
+        return groups;
+    }
 
-class SearchInput extends React.Component {
     render() {
-        return(
-            <input type="text" value={this.props.keyword} onChange={this.props.handleSearch} />
+        let groups = this.grouping(this.props.products);
+        let state = {titles: Object.keys(groups), itemsByGroup: groups};
+        return (
+            <section>
+                <section>
+                    <span className="product-name">Name</span>
+                    <span>Price</span>
+                </section>
+                {
+                    state.titles.map(title => {
+                        return <section key={title} className="product-group">
+                            <div className="product-group-name">{title}</div>
+                            {
+                                state.itemsByGroup[title].map(item => {
+                                    return <div key={item.name} className={item.stocked? '': 'product-no-stock'}>
+                                        <span className="product-name">{item.name}</span><span className="product-price">{item.price}</span>
+                                    </div>
+                                    })
+                            }
+                        </section>
+                    })
+                }
+            </section>
         )
     };
 }
 
-class ShowStock extends React.Component {
+class SearchInput extends Component {
+    render() {
+        return(
+            <input type="text" value={this.props.keyword} onChange={this.props.handleSearch} placeholder="Search..." />
+        )
+    };
+}
+
+class ShowStock extends Component {
     render() {
         console.log(this.props.showStocked);
         return (
