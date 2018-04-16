@@ -28,7 +28,6 @@ class CascadeSelector2 extends Component {
 
   handleSelect(e, level) {
     let currentSelected = e.target.value;
-    level = Number.parseInt(level, 10);
     if (level === 1) {
       this.setState({
         optionsL2: this.getOptions(2, [currentSelected]),
@@ -69,9 +68,9 @@ class CascadeSelector2 extends Component {
   render() {
     return (
       <div>
-        <LevelSelector level="1" options={this.state.optionsL1} selectedOpt={this.state.selectedL1} handleSelect={this.handleSelect} />
-        <LevelSelector level="2" options={this.state.optionsL2} selectedOpt={this.state.selectedL2} handleSelect={this.handleSelect} />
-        <LevelSelector level="3" options={this.state.optionsL3} selectedOpt={this.state.selectedL3} handleSelect={this.handleSelect} />
+        <LevelSelector level={1} options={this.state.optionsL1} selectedOpt={this.state.selectedL1} handleSelect={this.handleSelect} />
+        <LevelSelector level={2} options={this.state.optionsL2} selectedOpt={this.state.selectedL2} handleSelect={this.handleSelect} />
+        <LevelSelector level={3} options={this.state.optionsL3} selectedOpt={this.state.selectedL3} handleSelect={this.handleSelect} />
       </div>
     );
   };
